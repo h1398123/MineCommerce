@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89547b514fbb526428f5a3a89c3a0d2e, type: 3}
+  m_Name: player
+  m_EditorClassIdentifier: 
+  setManually: 0
+  saveDataOnClose: 0
+  maxHealth: 100
+  currentHealth: 50
+  maxHungry: 25
+  currentHungry: 10
+  maxWealth: 500
+  currentWealth: 0
+  maxEnergy: 10
+  currentEnergy: 0
+  maxSlot: 10
+  maxStack: 10
+  maxEncumbrance: 50
+  currentEncumbrance: 0
+  charExperience: 0
+  charLevel: 1
+  levelUps:
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
+  - maxHealth: 0
+    maxHungry: 0
+    maxWealth: 0
+    maxEnergy: 0
+    maxSlot: 0
+    maxStack: 0
+    maxEncumbrance: 0
