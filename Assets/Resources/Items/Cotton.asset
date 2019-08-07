@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610454ad63370f349951d5264711b566, type: 3}
   m_Name: Cotton
   m_EditorClassIdentifier: 
-  itemName: Cotton
+  itemName: "\u68C9\u82B1"
+  itemDescripttion: "\u68C9\u82B1\uFF0C\u767D\u8272\u7684\u8840\u8089\uFF0C\u662F\u51AC\u65E5\u7684\u5E0C\u671B\u3002"
   itemType: 6
   itemLevel: 0
   itemPrice: 0

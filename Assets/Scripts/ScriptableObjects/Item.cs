@@ -9,6 +9,8 @@ public enum ItemTypeDefinitions { HEALTH, WEALTH, FOOD, WEAPON, ARMOR, BUFF, EMP
 public class Item : ScriptableObject
 {
     public string itemName = "New Item";
+
+    public string itemDescripttion = "Item Descripttion";
     public ItemTypeDefinitions itemType = ItemTypeDefinitions.EMPTY;
     public int itemLevel = 0;
     public int itemPrice = 0;

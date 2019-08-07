@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     {
 
         players = GameObject.FindGameObjectsWithTag("Player");
-        CameraToPlayer = new Vector3(0,7,-5);
+        CameraToPlayer = new Vector3(0,20,-15);
     }
 
     // Update is called once per frame

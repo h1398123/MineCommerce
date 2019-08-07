@@ -1,74 +1,174 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
-public class Build : MonoBehaviour, IPointerClickHandler
+public class Build : Inventory
 {
     public BuildData BuildDefinition;
     public List<Item> items = new List<Item>();
-    public List<InventoryEntry> shop = new List<InventoryEntry>();
 
     public UnityEvent leftClick;
 
     public Inventory shopInventory;
 
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (eventData.button == PointerEventData.InputButton.Left)
-        {
-            leftClick.Invoke();
-        }
-    }
-
+    float lastTime;
+    float curTime;
     // Start is called before the first frame update
     void Start()
     {
-        leftClick.AddListener(new UnityAction(OpenShopPack));
-        shopInventory = GameObject.Find("ShopInventory").GetComponent<Inventory>();
-        foreach (Item im in items)
-        {
-            StoreItem(im,Random.Range(1,10));
-        }
+        targetItem = new InventoryEntry(0, null, null);
+        shopInventory = GameObject.Find("ShopInventoryDisplayManager").GetComponent<Inventory>();
+        Debug.Log("[Build]items has item "+items.Count);
+
+        lastTime = Time.time;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void StoreItem(Item im,int icout)
-    {
-        if(shop.Count==0)
+        curTime = Time.time;
+        if(curTime-lastTime>=10)
         {
-            shop.Add(new InventoryEntry(1, im, im.itemIcon));
+            Debug.Log("Timer is working!");
+            lastTime = curTime;
+            TimeOutput();
         }
     }
-    
 
-    private void OpenShopPack()
+    public void TimeOutput()
     {
-        shopInventory.sourceInventory = shop;
-        shopInventory.RefreshInventoryDisplay();
-
-        DisplayInventory();
+        foreach (Item im in items)
+        {
+            StoreItem(im, Random.Range(1, 3));
+        }
     }
 
-    void DisplayInventory()
+    new public void StoreItem(Item item, int stackCount = 1)
+    {
+        if(item!=null)
+        {
+            targetItem.itemEntry = item;
+            targetItem.stackSize = stackCount;
+            targetItem.hbSprite = item.itemIcon;
+        }
+        
+
+        base.TryPickUp();
+    }
+
+    new void TryPickUp()
+    {
+        for (int i = 0; i < targetItem.stackSize; i++)
+        {
+
+            bool itsInInv = true;
+            if (targetItem.itemEntry == null)
+            {
+                Debug.Log("targetItem is null!");
+            }
+            if (sourceInventory.Count == 0)
+            {
+                sourceInventory.Add(new InventoryEntry(targetItem.stackSize, targetItem.itemEntry, targetItem.hbSprite));
+            }
+            else
+            {
+                if (targetItem.itemEntry.isStackable)
+                {
+                    //遍历背包类
+                    foreach (InventoryEntry ie in sourceInventory)
+                    {
+                        //该物品是否已经存在于背包
+                        if (targetItem.itemEntry == ie.itemEntry)
+                        {
+                            bool iac = (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack);
+                            if (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack)
+                            {
+                                ie.stackSize += targetItem.stackSize;
+                                itsInInv = true;
+                                break;
+                            }
+                            else
+                            {
+                                itsInInv = false;
+                            }
+
+                        }
+                        //背包中没有该物品
+                        else
+                        {
+                            itsInInv = false;
+                        }
+                    }
+                }
+                else
+                {
+                    itsInInv = false;
+                }
+                //检查库存中是否有空间
+                if (!itsInInv)
+                {
+                    if (sourceInventory.Count >= SlotCount)
+                    {
+                        Debug.Log("Inventory is Full!");
+                    }
+                    else
+                    {
+                        AddItemToInventory();
+                    }
+
+
+                    itsInInv = true;
+                }
+
+
+            }
+        }
+
+        isRefresh = true;
+        Debug.Log(sourceInventory.Count);
+    }
+
+    private void OpenShopPage()
+    {
+        if(shopInventory.InventoryDisplayHolder.activeSelf == false)
+        {
+            shopInventory.DisplayInventory();
+        }
+        shopInventory.sourceInventory = sourceInventory;
+        shopInventory.RefreshInventoryDisplay();
+
+    }
+
+
+    private void CloseShopPage()
     {
         if (shopInventory.InventoryDisplayHolder.activeSelf == true)
         {
-            
+            shopInventory.DisplayInventory();
         }
-        else
-        {
-            shopInventory.InventoryDisplayHolder.SetActive(true);
-        }
+        shopInventory.sourceInventory = null;
 
-        
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Open the ShopPage");
+        if (other.gameObject.tag=="Player")
+        {
+            OpenShopPage();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            CloseShopPage();
+        }
     }
 
 }

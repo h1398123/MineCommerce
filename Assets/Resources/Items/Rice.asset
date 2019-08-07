@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 610454ad63370f349951d5264711b566, type: 3}
   m_Name: Rice
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickUps_SO
-  itemName: Rice
+  itemName: "\u5927\u7C73"
+  itemDescripttion: "\u7A3B\u8C37\u7ECF\u6E05\u7406\u3001\u783B\u8C37\u3001\u78BE\u7C73\u3001\u6210\u54C1\u6574\u7406\u7B49\u5DE5\u5E8F\u540E\u5236\u6210\u7684\u6210\u54C1"
   itemType: 6
   itemLevel: 0
   itemPrice: 5

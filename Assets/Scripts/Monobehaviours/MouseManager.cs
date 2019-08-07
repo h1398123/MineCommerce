@@ -66,6 +66,12 @@ public class MouseManager : MonoBehaviour
         {
             Cursor.SetCursor(pointer, Vector2.zero, CursorMode.Auto);
         }
+
+
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            GameObject.Find("PlayerInventoryDisplayMannager").GetComponent<Inventory>().DisplayInventory();
+        }
     }
 }
 

@@ -52,19 +52,23 @@ public class Inventory : MonoBehaviour
     /// </summary>
     int idCount = 1;
 
-
-
+    /// <summary>
+    /// 物品说明界面
+    /// </summary>
+   public ItemInformation itemInfo;
 
     bool isRefresh = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        itemInfo = GameObject.Find("ItemInformationManager").GetComponent<ItemInformation>();
+
         targetItem = new InventoryEntry(0, null, null);
 
         sourceInventory.Clear();
 
-        
+
 
         AddSlot(SlotCount);
     }
@@ -72,10 +76,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            DisplayInventory();
-        }
+
 
         if (isRefresh)
         {
@@ -89,29 +90,22 @@ public class Inventory : MonoBehaviour
         //sourceInventory = setSour;
     }
 
+    /*
     public void Sell(Image image)
     {
-        
-        if (targetInventory.sourceInventory == null)
-        {
-            Debug.Log("2");
-            return;
-        }
-        foreach (InventoryEntry inve in sourceInventory)
-        {
-            if (image.sprite==inve.hbSprite)
-            {
-                DiscardItem(inve);
-                targetInventory.StoreItem(inve);
-                break;
-            }
-        }
+        InventoryEntry inv=FindInvEntryInInvetory(image);
+        DiscardItem(inv);
+        targetInventory.StoreItem(inv);
     }
-
-    public void Sell(Image image,int num)
+    */
+    public void Sell(Image image, int num=1)
     {
-        for(int i=1; i<=num;i++)
+        InventoryEntry inv = FindInvEntryInInvetory(image);
+        for (int i = 0; i < num; i++)
         {
+            DiscardItem(inv);
+            targetInventory.StoreItem(inv);
+            /*
             if (targetInventory.sourceInventory == null)
             {
 
@@ -129,18 +123,71 @@ public class Inventory : MonoBehaviour
 
 
             }
+            */
+        }
+
+
+
+    }
+
+
+    public InventoryEntry FindInvEntryInInvetory(Image image)
+    {
+        if(image.sprite==null)
+        {
+            return new InventoryEntry(0,null,null);
+        }
+        if (targetInventory.sourceInventory == null)
+        {
+
+            return new InventoryEntry(0, null, null);
+        }
+        foreach (InventoryEntry inve in sourceInventory)
+        {
+            if (image.sprite == inve.hbSprite)
+            {
+                return inve;
+            }
+
+
+
+        }
+        return new InventoryEntry(0, null, null);
+    }
+
+    public void DisplayInformation(Image image)
+    {
+        InventoryEntry invEntry = FindInvEntryInInvetory(image);
+        if (invEntry != null)
+        {
+            string asd = NewMethod(invEntry);
+            itemInfo.InformationDisplay(invEntry.itemEntry.itemName, invEntry.itemEntry.itemDescripttion, asd);
+            
+        }
+        else
+        {
+            Debug.LogError("[Invetory:DisplayInformation]Image is Emtpy");
         }
         
 
 
     }
 
+    private static string NewMethod(InventoryEntry inv)
+    {
+        return inv.stackSize.ToString() + " X " + inv.itemEntry.itemPrice.ToString() + "G= " + inv.stackSize * inv.itemEntry.itemPrice+"G";
+    }
+
+    public void ConcealInformation()
+    {
+        itemInfo.InformationConceal();
+    }
     void Buy()
     {
 
     }
 
-    public void StoreItem(Item item,int stackCount=1)
+    public void StoreItem(Item item, int stackCount = 1)
     {
         if ((charStats.characterDefinition.currentEncumbrance + item.itemWeight) <= charStats.characterDefinition.maxEncumbrance)
         {
@@ -180,114 +227,120 @@ public class Inventory : MonoBehaviour
         TryThrowOut();
     }
 
-    void TryPickUp()
+    protected void TryPickUp()
     {
-        bool itsInInv = true;
-        if (targetItem.itemEntry == null)
+        for (int i = 0; i < targetItem.stackSize; i++)
         {
-            Debug.Log("targetItem is null!");
-        }
-        if (sourceInventory.Count == 0)
-        {
-            sourceInventory.Add(new InventoryEntry(targetItem.stackSize, targetItem.itemEntry, targetItem.hbSprite));
-        }
-        else
-        {
-            if (targetItem.itemEntry.isStackable)
+
+            bool itsInInv = true;
+            if (targetItem.itemEntry == null)
             {
-                //遍历背包类
+                Debug.Log("targetItem is null!");
+            }
+            if (sourceInventory.Count == 0)
+            {
+                sourceInventory.Add(new InventoryEntry(targetItem.stackSize, targetItem.itemEntry, targetItem.hbSprite));
+            }
+            else
+            {
+                if (targetItem.itemEntry.isStackable)
+                {
+                    //遍历背包类
+                    foreach (InventoryEntry ie in sourceInventory)
+                    {
+                        //该物品是否已经存在于背包
+                        if (targetItem.itemEntry == ie.itemEntry)
+                        {
+                            bool iac = (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack);
+                            if (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack)
+                            {
+                                ie.stackSize += targetItem.stackSize;
+                                itsInInv = true;
+                                break;
+                            }
+                            else
+                            {
+                                itsInInv = false;
+                            }
+
+                        }
+                        //背包中没有该物品
+                        else
+                        {
+                            itsInInv = false;
+                        }
+                    }
+                }
+                else
+                {
+                    itsInInv = false;
+                }
+                //检查库存中是否有空间
+                if (!itsInInv)
+                {
+                    if (sourceInventory.Count >= SlotCount)
+                    {
+                        Debug.Log("Inventory is Full!");
+                    }
+                    else
+                    {
+                        AddItemToInventory();
+                    }
+
+
+                    itsInInv = true;
+                }
+
+
+            }
+        }
+
+        isRefresh = true;
+        Debug.Log(sourceInventory.Count);
+    }
+
+    protected void TryThrowOut()
+    {
+        for (int i = 0; i < targetItem.stackSize; i++)
+        {
+            int count = 0;
+            if (targetItem.itemEntry == null)
+            {
+                Debug.Log("targetItem is null!");
+            }
+
+            if (sourceInventory.Count == 0)
+            {
+                Debug.Log("the backpack is Empty");
+            }
+            else
+            {
                 foreach (InventoryEntry ie in sourceInventory)
                 {
-                    //该物品是否已经存在于背包
                     if (targetItem.itemEntry == ie.itemEntry)
                     {
-                        bool iac = (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack);
-                        if (ie.stackSize + targetItem.stackSize <= charStats.characterDefinition.maxStack)
+                        if (ie.stackSize == 1)
                         {
-                            ie.stackSize += targetItem.stackSize;
-                            itsInInv = true;
+                            count = sourceInventory.IndexOf(ie);
+                            RemoveItemInInventory(count);
                             break;
                         }
                         else
                         {
-                            itsInInv = false;
+                            ie.stackSize -= 1;
+                            isRefresh = true;
+                            break;
                         }
 
                     }
                     //背包中没有该物品
                     else
                     {
-                        itsInInv = false;
+                        Debug.Log("There are not the item");
                     }
                 }
+
             }
-            else
-            {
-                itsInInv = false;
-            }
-            //检查库存中是否有空间
-            if (!itsInInv)
-            {
-                if (sourceInventory.Count >= SlotCount)
-                {
-                    Debug.Log("Inventory is Full!");
-                }
-                else
-                {
-                    AddItemToInventory();
-                }
-
-
-                itsInInv = true;
-            }
-
-
-        }
-
-
-        isRefresh = true;
-        Debug.Log(sourceInventory.Count);
-    }
-
-    void TryThrowOut()
-    {
-        int count = 0;
-        if (targetItem.itemEntry == null)
-        {
-            Debug.Log("targetItem is null!");
-        }
-
-        if (sourceInventory.Count == 0)
-        {
-            Debug.Log("the backpack is Empty");
-        }
-        else
-        {
-            foreach (InventoryEntry ie in sourceInventory)
-            {
-                if (targetItem.itemEntry == ie.itemEntry)
-                {
-                    if (ie.stackSize == 1)
-                    {
-                        count = sourceInventory.IndexOf(ie);
-                        RemoveItemInInventory(count);
-                        break;
-                    }
-                    else
-                    {
-                        ie.stackSize -= 1;
-                        isRefresh = true;
-                        break;
-                    }
-
-                }
-                //背包中没有该物品
-                else
-                {
-                    Debug.Log("There are not the item");
-                }
-            }
-
         }
     }
 
@@ -306,11 +359,11 @@ public class Inventory : MonoBehaviour
 
     void RemoveItemInInventory(int count)
     {
-        
+
         inventoryDisplaySlots[count].sprite = null;
         inventoryDisplaySlots[count].GetComponentInChildren<Text>().text = " ";
         sourceInventory.RemoveAt(count);
-        
+
 
         isRefresh = true;
 
@@ -323,19 +376,21 @@ public class Inventory : MonoBehaviour
 
     public void RefreshInventoryDisplay()
     {
-        
-        foreach(Image id in inventoryDisplaySlots)
+
+        foreach (Image id in inventoryDisplaySlots)
         {
             id.sprite = null;
             id.GetComponentInChildren<Text>().text = "";
         }
-
 
         for (int i = 0; i < sourceInventory.Count; i++)
         {
             inventoryDisplaySlots[i].sprite = sourceInventory[i].hbSprite;
             inventoryDisplaySlots[i].GetComponentInChildren<Text>().text = sourceInventory[i].stackSize.ToString();
         }
+
+
+        isRefresh = false;
     }
 
 
@@ -372,7 +427,7 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    void DisplayInventory()
+    public void DisplayInventory()
     {
         if (InventoryDisplayHolder.activeSelf == true)
         {
@@ -387,7 +442,7 @@ public class Inventory : MonoBehaviour
     public void Clear()
     {
         sourceInventory = null;
-        
+
     }
 
 
