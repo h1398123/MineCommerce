@@ -56259,21 +56259,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a0c9f7f93b945c40b040c025066c350, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charStats: {fileID: 0}
-  slot: {fileID: 0}
-  inventoryDisplaySlots: []
-  InventoryDisplayHolder: {fileID: 0}
-  targetInventory: {fileID: 0}
-  SlotCount: 36
-  itemInfo: {fileID: 0}
   BuildDefinition: {fileID: 11400000, guid: cf6c793081a91d6478f263d3512c73e8, type: 2}
   items:
   - {fileID: 11400000, guid: 5e2150fd802537e44bb5f6bd0c874b95, type: 2}
   - {fileID: 11400000, guid: bea514c007bf5da45a6dd0f9579a5d20, type: 2}
   - {fileID: 11400000, guid: 4c385fff72676be41bb4daf801aa1b84, type: 2}
+  - {fileID: 11400000, guid: e57c65e7a4d8e6a4480a852d6ab6dfce, type: 2}
+  - {fileID: 11400000, guid: 4cd70e3b287eb374b88634f48a13f42e, type: 2}
+  shopInventory: {fileID: 0}
   leftClick:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  shopInventory: {fileID: 0}
+  middleClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  rightClick:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  maxSlotCount: 36
+  maxStackSize: 100

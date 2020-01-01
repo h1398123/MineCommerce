@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickUps_SO
   itemName: "\u5927\u7C73"
   itemDescripttion: "\u7A3B\u8C37\u7ECF\u6E05\u7406\u3001\u783B\u8C37\u3001\u78BE\u7C73\u3001\u6210\u54C1\u6574\u7406\u7B49\u5DE5\u5E8F\u540E\u5236\u6210\u7684\u6210\u54C1"
-  itemType: 6
+  itemType: 2
   itemLevel: 0
   itemPrice: 5
   itemIcon: {fileID: 21300000, guid: c8d65e139c944e949beee2781b208b6a, type: 3}

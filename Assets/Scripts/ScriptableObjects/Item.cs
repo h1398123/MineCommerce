@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum ItemTypeDefinitions { HEALTH, WEALTH, FOOD, WEAPON, ARMOR, BUFF, EMPTY };
 
-[CreateAssetMenu(fileName = "NewItem", menuName = "Spawnable Item/New Pick-up", order = 1)]
+[CreateAssetMenu(fileName = "NewItem", menuName = "Item/New Item", order = 1)]
 public class Item : ScriptableObject
 {
     public string itemName = "New Item";
 
     public string itemDescripttion = "Item Descripttion";
-    public ItemTypeDefinitions itemType = ItemTypeDefinitions.EMPTY;
+    public ItemType itemType = ItemType.EMPTY;
     public int itemLevel = 0;
     public int itemPrice = 0;
 
@@ -55,3 +54,48 @@ public class Item : ScriptableObject
     /// </summary>
     public float itemWeight = 0f;
 }
+
+
+
+/// <summary>
+/// 物品类型
+/// </summary>
+public enum ItemType
+{
+    /// <summary>
+    /// 药物
+    /// </summary>
+    HEALTH,
+    /// <summary>
+    /// 财物
+    /// </summary>
+    WEALTH,
+    /// <summary>
+    /// 食物
+    /// </summary>
+    FOOD,
+    /// <summary>
+    /// 军需
+    /// </summary>
+    WAR,
+    /// <summary>
+    /// 资源
+    /// </summary>
+    MATERIAL,
+    /// <summary>
+    /// Buff物品
+    /// </summary>
+    BUFF,
+    /// <summary>
+    /// 其他
+    /// </summary>
+    OTHER,
+    /// <summary>
+    /// 特殊
+    /// </summary>
+    SPECIAL,
+    /// <summary>
+    /// 空
+    /// </summary>
+    EMPTY
+};
